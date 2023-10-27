@@ -46,11 +46,33 @@ router.post(
     }
   );
 
+
+//logs user out by deleting the token
   router.delete(
     '/',
     (_req, res) => {
       res.clearCookie('token');
       return res.json({ message: 'success' });
+    }
+  );
+
+
+
+// Restore session user
+router.get(
+    '/',
+    (req, res) => {
+      const { user } = req;
+      if (user) {
+        const safeUser = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        };
+        return res.json({
+          user: safeUser
+        });
+      } else return res.json({ user: null });
     }
   );
 
