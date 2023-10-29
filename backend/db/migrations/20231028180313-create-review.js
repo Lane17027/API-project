@@ -10,13 +10,17 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       spotId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        //added unique
+        unique:true
       },
       userId: {
         type: Sequelize.INTEGER
       },
       review: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        //added null
+        allowNull:false
       },
       stars: {
         type: Sequelize.INTEGER
