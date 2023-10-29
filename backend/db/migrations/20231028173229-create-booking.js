@@ -16,10 +16,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       startDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        //added unique
+        unique:true
       },
       endDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        //added unique
+        unique:true
       },
       createdAt: {
         allowNull: false,
