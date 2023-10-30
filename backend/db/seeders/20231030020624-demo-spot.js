@@ -13,7 +13,7 @@ module.exports = {
 
       await Spot.bulkCreate([
         {
-        ownderId: 1,
+        ownerId: 1,
         address: '2330 Saddle Court',
         city: 'Idaho Falls',
         state: 'Idaho',
@@ -24,7 +24,7 @@ module.exports = {
         description: 'My childhood home that I grew up in Idaho',
         price: 50
       }, {
-        ownderId: 1,
+        ownerId: 1,
         address: '2100 W 1450',
         city: 'Layton',
         state: 'Utah',
@@ -36,7 +36,7 @@ module.exports = {
         price: 33
       },
       {
-        ownderId: 2,
+        ownerId: 2,
         address: '3303 wifes street',
         city: 'Hurricane',
         state: 'Utah',
@@ -48,7 +48,7 @@ module.exports = {
         price: 100
       },
       {
-        ownderId: 2,
+        ownerId: 2,
         address: '2100 N Churchwood Drive',
         city: 'Tooele',
         state: 'Utah',
@@ -60,7 +60,7 @@ module.exports = {
         price: 56
       },
       {
-        ownderId: 3,
+        ownerId: 3,
         address: '6300 N Salt Creed RD',
         city: 'Honeyville',
         state: 'Utah',
@@ -79,7 +79,7 @@ module.exports = {
      const Op=Sequelize.Op;
 
      return queryInterface.bulkDelete(options, {
-      ownderId: {[Op.in]: [1,2,3]}
+      ownerId: {[Op.in]: [1,2,3]}
      },{})
   }
 };
