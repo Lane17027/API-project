@@ -67,6 +67,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-      await queryInterface.bulkDelete('Spots');
+      await queryInterface.bulkDelete('Spots', {ownderId: [1,2,3]});
   }
 };
