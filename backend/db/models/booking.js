@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     spotId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     startDate: {
-      type:DataTypes.DATE,
+      type:DataTypes.DATEONLY,
       //added unique/validator
       unique:true,
       validate: {
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     endDate:{
-      type:DataTypes.DATE,
+      type:DataTypes.DATEONLY,
       //added unique/validator
       unique:true,
       validate: {
