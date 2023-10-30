@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       //added unique/validator
       unique:true,
       validate: {
+        isDate: true,
         isBeforeEndDate(value) {
           if (value >= this.endDate) {
             throw new Error('Start date must be before the end date');
@@ -33,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       //added unique/validator
       unique:true,
       validate: {
+        isDate: true,
         isAfterStartDate(value) {
           if (value <= this.startDate) {
             throw new Error('End date must be after the start date');
