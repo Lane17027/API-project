@@ -21,17 +21,26 @@ module.exports = (sequelize, DataTypes) => {
       //added unique/validator
       unique:true,
       validate: {
-        isBefore: this.endDate
-      }
+        isBeforeEndDate(value) {
+          if (value >= this.endDate) {
+            throw new Error('Start date must be before the end date');
+          }
+        },
+      },
     },
     endDate:{
       type:DataTypes.DATEONLY,
       //added unique/validator
       unique:true,
       validate: {
-        isAfter: this.startDate
-      }
-    }
+        isAfterStartDate(value) {
+          if (value <= this.startDate) {
+            throw new Error('End date must be after the start date');
+          }
+        },
+      },
+    },
+
   }, {
     sequelize,
     modelName: 'Booking',
