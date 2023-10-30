@@ -1,5 +1,5 @@
 'use strict';
-const { type } = require('cypress/types/jquery');
+
 const {
   Model
 } = require('sequelize');
