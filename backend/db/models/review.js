@@ -1,0 +1,41 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Review extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  Review.init({
+    spotId: {
+      type:DataTypes.INTEGER,
+      //added unique
+      unique:true
+    },
+    userId: DataTypes.INTEGER,
+    review: {
+      type:DataTypes.STRING,
+      //added null
+      allowNull:false
+    },
+    stars: {
+      type:DataTypes.INTEGER,
+      //added validate
+      validate : {
+        min:1,
+        max:5
+      }
+    }
+  }, {
+    sequelize,
+    modelName: 'Review',
+  });
+  return Review;
+};
