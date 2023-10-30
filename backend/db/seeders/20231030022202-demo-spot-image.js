@@ -1,6 +1,6 @@
 'use strict';
 
-const {SpotImages}= require('../models')
+const {SpotImage}= require('../models')
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -12,7 +12,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
 
 
-   await SpotImages.bulkCreate([
+   await SpotImage.bulkCreate([
     {
      spotId: 1,
      url : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
