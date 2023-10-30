@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       //added unique/validator
       unique:true,
       validate: {
-        isBefore: this.endDate
+        isBefore: endDate
       }
     },
     endDate:{
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       //added unique/validator
       unique:true,
       validate: {
-        isAfter: this.startDate
+        isAfter: startDate
       }
     }
   }, {
