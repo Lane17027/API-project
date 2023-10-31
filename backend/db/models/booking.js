@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Booking.belongsTo(models.User, {
+        foreignKey: 'id'
+      })
     }
   }
   Booking.init({
@@ -18,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     startDate: {
       type:DataTypes.DATEONLY,
-      //added unique/validator
       unique:true,
       validate: {
         isDate: true,
@@ -31,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     endDate:{
       type:DataTypes.DATEONLY,
-      //added unique/validator
       unique:true,
       validate: {
         isDate: true,
