@@ -16,24 +16,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       spotId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references: {
+          model: 'Spots',
+          key: 'id'
+        }
       },
       userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        allowNull:false
       },
       startDate: {
         type: Sequelize.DATEONLY,
         //added unique
-        unique:true
+        unique:true,
+        allowNull:false
       },
       endDate: {
         type: Sequelize.DATEONLY,
         //added unique
-        unique:true
+        unique:true,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,
