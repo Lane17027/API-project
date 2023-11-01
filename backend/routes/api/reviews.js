@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { User,Review,Spot,ReviewImage, SpotImage} = require('../../db/models');
 
 
@@ -59,8 +59,8 @@ router.get('/current', async (req, res, next)=>{
 
 //Add an Image to a Review based on the Review's id
 
-//Need to look at how to authorize the user, i.e the userId has to equal the review userId
-router.post('/:reviewId/images', async (req, res, next)=>{
+//Completed
+router.post('/:reviewId/images',requireAuth, async (req, res, next)=>{
 const {user}=req
 const {url}=req.body
 const reviewId=req.params.reviewId
@@ -71,13 +71,22 @@ const allReviewImage=await ReviewImage.findAll({
     where: {
         reviewId
     }
+
 })
 
-// if(user.id !== review.userId){
-//     const err= new Error("Forbidden")
-//     err.statusCode=403
+if (!review){
+    const err=new Error ("Review couldn't be found")
+    err.statusCode=404
+    next(err)
+}
 
-// }
+
+if(user.id !== review.userId){
+    const err= new Error("Forbidden")
+    err.statusCode=403
+    next(err)
+
+}
 
 if(allReviewImage.length>=10){
     const err= new Error ("Maximum number of images for this resource was reached")
@@ -85,12 +94,6 @@ if(allReviewImage.length>=10){
     next(err)
 }
 
-
-if (!review){
-    const err=new Error ("Review couldn't be found")
-    err.statusCode=404
-    next(err)
-}
 
 const newReviewImg=await review.createReviewImage({
     url
@@ -105,16 +108,13 @@ res.json({
 
 
 
-
-
-
-
 //Edit a review
 
 //Could not figure out Error Response: Body Validation Error handling,
 //also couldn't figure out how it was passing stars validator for allowing
 //numbers outside of 1-5
-router.put('/:reviewId', async (req,res,next)=>{
+router.put('/:reviewId',requireAuth, async (req,res,next)=>{
+    const {user}=req
     const {reviewId}=req.params
     const {review, stars}=req.body
 
@@ -126,8 +126,19 @@ router.put('/:reviewId', async (req,res,next)=>{
         next(err)
     }
 
+    if(user.id !== review.userId){
+        const err= new Error("Forbidden")
+        err.statusCode=403
+        next(err)
+
+    }
+
     idReview.review=review
     idReview.stars=stars
+
+    await idReview.save()
+
+
 
     res.json({
         idReview
@@ -153,11 +164,7 @@ router.delete('/:reviewId', async (req,res,next)=>{
     res.json({
         message: 'Successfully deleted'
     })
-
-
-
 })
-
 
 
 router.use((err,req,res,next)=>{

@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { User,Review,Spot,ReviewImage, SpotImage} = require('../../db/models');
 
 const { check } = require('express-validator');
@@ -11,7 +11,18 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+//Get details of a Spot from an id
+router.get('/:spotId', async(req,res,next)=>{
+    const {spotId}=req.params
 
+    const spot=await Spot.findByPk(spotId,{
+        include: {
+            
+        }
+    })
+
+
+})
 
 //Create a Booking from a Spot based on the Spot's id
 router.post('/:spotId/bookings', async (req,res,next)=>{
@@ -37,7 +48,7 @@ router.get('/:spotId/bookings', async (req,res,next)=>{
 });
 
 //Get all Spots owned by the Current User
-router.get('/current', async (req,res,next)=>{
+router.get('/current',requireAuth, async (req,res,next)=>{
     const {user}= req;
    const userId=user.id;
 
