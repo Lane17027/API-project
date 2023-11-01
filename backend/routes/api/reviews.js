@@ -21,7 +21,7 @@ const { handleValidationErrors } = require("../../utils/validation");
 const router = express.Router();
 
 //Get all Reviews of the Current User
-//Need to fix the updatedAt/createdAt to show correct numbers
+//I believe completed
 router.get("/current", async (req, res, next) => {
   const { user } = req;
   const userId = user.id;
@@ -113,8 +113,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 //Edit a review
 
 //Could not figure out Error Response: Body Validation Error handling,
-//also couldn't figure out how it was passing stars validator for allowing
-//numbers outside of 1-5
+//I think its completed
 router.put("/:reviewId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { reviewId } = req.params;
@@ -156,9 +155,9 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 
 //Delete a Review
 //Completed
-router.delete("/:reviewId",requireAuth, async (req, res, next) => {
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
-  const ownerId=req.user.id
+  const ownerId = req.user.id;
 
   let idReview = await Review.findByPk(reviewId);
 
@@ -168,11 +167,11 @@ router.delete("/:reviewId",requireAuth, async (req, res, next) => {
     next(err);
   }
 
-if(ownerId!==idReview.userId){
+  if (ownerId !== idReview.userId) {
     return res.status(403).json({
-        message: 'You are not authorized to delete this review'
-    })
-}
+      message: "You are not authorized to delete this review",
+    });
+  }
   await idReview.destroy();
 
   res.status(200).json({

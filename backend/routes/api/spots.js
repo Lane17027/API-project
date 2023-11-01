@@ -1,147 +1,226 @@
-const express = require('express');
-const { Op } = require('sequelize');
-const bcrypt = require('bcryptjs');
+const express = require("express");
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
-const { User,Review,Spot,ReviewImage, SpotImage} = require('../../db/models');
+const {
+  setTokenCookie,
+  restoreUser,
+  requireAuth,
+} = require("../../utils/auth");
+const {
+  User,
+  Review,
+  Spot,
+  ReviewImage,
+  SpotImage,
+} = require("../../db/models");
 
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
 
-//Get details of a Spot from an id
-// router.get('/:spotId', async(req,res,next)=>{
-//     // const {spotId}=req.params
+//Part One: Get all Spots-Completed
+//Part Two: Add Query Filter to Get All Spots
+router.get("/", async (req, res, next) => {
+  const Spots = await Spot.findAll();
 
-//     // const spot=await Spot.findByPk(spotId,{
-//     //     include: {
-
-//     //     }
-//     // })
-
-
-// })
-
-
-
-//Create a Booking from a Spot based on the Spot's id
-router.post('/:spotId/bookings', async (req,res,next)=>{
-
-})
-
-//Get all Reviews by a Spot's id
-router.get('/:spotId/reviews', async (req,res,next)=> {
-
-
+  res.json({
+    Spots,
+  });
 });
 
-//Create a Review for a Spot based on the Spot's id
-router.post('/:spotId/reviews', async (req,res,next)=>{
+router.use((err, req, res, next) => {
+  const status = err.statusCode || 500;
+  const message = err.message || "The requested resource couldn't be found.";
+  res.status(status);
 
-
-});
-
-
-//Get all Bookings for a Spot based on the Spot's id
-router.get('/:spotId/bookings', async (req,res,next)=>{
-
+  res.json({
+    message,
+  });
 });
 
 //Get all Spots owned by the Current User
-router.get('/current',requireAuth, async (req,res,next)=>{
-    const {user}= req;
-   const userId=user.id;
-   const mySpots=await Spot.findAll({
-    where: {ownerId:userId}
-   })
-   let reviews=[]
-   let averages=[]
+//I believe its complete
+router.get("/current", requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const userId = user.id;
+  const mySpots = await Spot.findAll({
+    where: { ownerId: userId },
+  });
+  let reviews = [];
+  let averages = [];
 
-   //see if the spot has a review, if not set avg rating to no reviews. If it does, push to reviews array
-   for (let spot of mySpots){
-    const review= await Review.findAll({
-        where: {
-            spotId: spot.id
-        }
-    })
-    if(review.length){
-        reviews.push(review)
+  //see if the spot has a review, if not set avg rating to no reviews. If it does, push to reviews array
+  for (let spot of mySpots) {
+    const review = await Review.findAll({
+      where: {
+        spotId: spot.id,
+      },
+    });
+    if (review.length) {
+      reviews.push(review);
+    } else {
+      spot.dataValues.avgRating =
+        "There are no reviews for this spot, be the first one!";
     }
-    else {
-       spot.dataValues.avgRating='There are no reviews for this spot, be the first one!'
-    }
-   }
+  }
 
-   //Find the average review for each spot, push to averages array to later assign to each spot
-   for (let review of reviews){
-    let sum=0
-    for (let i=0;i<review.length;i++){
-       sum+=review[i].stars
+  //Find the average review for each spot, push to averages array to later assign to each spot
+  for (let review of reviews) {
+    let sum = 0;
+    for (let i = 0; i < review.length; i++) {
+      sum += review[i].stars;
     }
-    let avg=sum/review.length
-    averages.push(avg)
-   }
+    let avg = sum / review.length;
+    averages.push(avg);
+  }
 
-   //If avg rating for spot was previously assigned due to not having one, skip. If it is not assigned, assign the spot average
-  for (let i=0;i<mySpots.length;i++){
-    if(!mySpots[i].dataValues.avgRating){
-        mySpots[i].dataValues.avgRating=averages[i]
+  //If avg rating for spot was previously assigned due to not having one, skip. If it is not assigned, assign the spot average
+  for (let i = 0; i < mySpots.length; i++) {
+    if (!mySpots[i].dataValues.avgRating) {
+      mySpots[i].dataValues.avgRating = averages[i];
     }
   }
 
   //if spot has preview image, set previewImage to the preview image url. If not, assign previewImage to it doesn't have a value
-   for (let spot of mySpots){
-    const previewImage= await SpotImage.findOne({
-        where: {
-            spotId:spot.id,
-            preview:true
-        }
-    })
-    if(previewImage){
-        spot.dataValues.previewImage=previewImage.url
+  for (let spot of mySpots) {
+    const previewImage = await SpotImage.findOne({
+      where: {
+        spotId: spot.id,
+        preview: true,
+      },
+    });
+    if (previewImage) {
+      spot.dataValues.previewImage = previewImage.url;
+    } else {
+      console.log(previewImage);
+      spot.dataValues.previewImage = "This spot doesn't have a preview image";
     }
-    else{
-        console.log(previewImage)
-        spot.dataValues.previewImage="This spot doesn't have a preview image"
-    }
-   }
-   res.json({Spots: mySpots})
-})
+  }
+  res.json({ Spots: mySpots });
+});
 
-//Part One: Get all Spots-Completed
-//Part Two: Add Query Filter to Get All Spots
-router.get('/', async (req, res, next)=>{
-    const Spots =await Spot.findAll()
+//Get details of a Spot from an id
+//Need to reorganize the order of numReviews and AvgRating
+router.get("/:spotId", async (req, res, next) => {
+  const { spotId } = req.params;
 
-    res.json({
-        Spots
-    })
+  const spot = await Spot.findByPk(spotId, {
+    include: [
+      {
+        model: SpotImage,
+        attributes: ["id", "url", "preview"],
+      },
+      {
+        model: User,
+        as: "Owner",
+        attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+  });
 
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
 
-})
+  const reviews = await Review.findAll({
+    where: {
+      spotId,
+    },
+  });
 
+  let sum = 0;
+  for (let review of reviews) {
+    sum += review.stars;
+  }
 
+  const avgRating = sum / reviews.length;
 
+  if (!reviews.length) {
+    spot.dataValues.numReviews =
+      "There are currently no reviews for this listing, but you could be the first!";
+    spot.dataValues.avgRating =
+      "There are currently no reviews for this listing, but you could be the first!";
+  } else {
+    spot.dataValues.numReviews = reviews.length;
+    spot.dataValues.avgRating = avgRating;
+  }
 
+  res.json(spot);
+});
 
+//Create a Spot
+router.post("/", requireAuth, async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+  const dataObj = {
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+  };
 
+  if (
+    !address ||
+    !city ||
+    !state ||
+    !country ||
+    lat > 90 ||
+    lat < -90 ||
+    lng < -180 ||
+    lng > 180 ||
+    name.length > 49 ||
+    !description ||
+    !price
+  ) {
+    return res.status(400).json({
+      message: "Bad Request", // (or "Validation error" if generated by Sequelize),
+      errors: {
+        address: "Street address is required",
+        city: "City is required",
+        state: "State is required",
+        country: "Country is required",
+        lat: "Latitude is not valid",
+        lng: "Longitude is not valid",
+        name: "Name must be less than 50 characters",
+        description: "Description is required",
+        price: "Price per day is required",
+      },
+    });
+  }
 
-router.use((err,req,res,next)=>{
-    const status=err.statusCode || 500
-    const message=err.message || "The requested resource couldn't be found."
-    res.status(status)
+  const newSpot = await Spot.create(dataObj);
 
-   res.json({
-        message
-    })
-})
+  res.json(newSpot);
+});
 
+//Add an Image to a Spot based on the Spot's id
+router.post("/:spotId/images", async (req, res, next) => {});
 
+//Edit a Spot
+router.put("/:spotId", async (req, res, next) => {});
 
+//Delete a Spot
+router.delete("/:spotId", (req, res, next) => {});
 
+//Create a Booking from a Spot based on the Spot's id
+router.post("/:spotId/bookings", async (req, res, next) => {});
 
+//Get all Reviews by a Spot's id
+router.get("/:spotId/reviews", async (req, res, next) => {});
 
+//Create a Review for a Spot based on the Spot's id
+router.post("/:spotId/reviews", async (req, res, next) => {});
+
+//Get all Bookings for a Spot based on the Spot's id
+router.get("/:spotId/bookings", async (req, res, next) => {});
 
 module.exports = router;
