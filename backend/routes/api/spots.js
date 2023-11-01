@@ -17,12 +17,14 @@ router.get('/:spotId', async(req,res,next)=>{
 
     const spot=await Spot.findByPk(spotId,{
         include: {
-            
+
         }
     })
 
 
 })
+
+
 
 //Create a Booking from a Spot based on the Spot's id
 router.post('/:spotId/bookings', async (req,res,next)=>{
@@ -107,6 +109,9 @@ router.get('/', async (req, res, next)=>{
 
 
 })
+
+
+
 
 
 
