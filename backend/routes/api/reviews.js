@@ -8,7 +8,6 @@ const { User,Review,Spot,ReviewImage, SpotImage} = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const spotimage = require('../../db/models/spotimage');
 
 const router = express.Router();
 
@@ -18,7 +17,6 @@ const router = express.Router();
 //Need to fix the updatedAt/createdAt to show correct numbers
 router.get('/current', async (req, res, next)=>{
    const {user}= req;
-
    const userId=user.id
 
    const myReviews=await Review.findAll({
@@ -35,24 +33,16 @@ router.get('/current', async (req, res, next)=>{
         {
         model: ReviewImage,
         attributes: ['id', 'url']
-
-
         }
-
     ]
    })
 
-
-   //
    for (let review of myReviews){
     const previewImage= await SpotImage.findOne({
         where: {spotId: review.spotId}
     })
     review.Spot.dataValues.previewImage=previewImage.url
    }
-
-
-
 
 
    res.json({Reviews: myReviews})
@@ -72,14 +62,10 @@ router.get('/current', async (req, res, next)=>{
 //Need to look at how to authorize the user, i.e the userId has to equal the review userId
 router.post('/:reviewId/images', async (req, res, next)=>{
 const {user}=req
-
-
 const {url}=req.body
-
 const reviewId=req.params.reviewId
 
 const review=await Review.findByPk(reviewId)
-
 
 const allReviewImage=await ReviewImage.findAll({
     where: {
@@ -88,22 +74,22 @@ const allReviewImage=await ReviewImage.findAll({
 })
 
 // if(user.id !== review.userId){
-//     const error= new Error("Forbidden")
-//     error.statusCode=403
+//     const err= new Error("Forbidden")
+//     err.statusCode=403
 
 // }
 
 if(allReviewImage.length>=10){
-    const error= new Error ("Maximum number of images for this resource was reached")
-    error.statusCode
-    next(error)
+    const err= new Error ("Maximum number of images for this resource was reached")
+    err.statusCode
+    next(err)
 }
 
 
 if (!review){
-    const error=new Error ("Review couldn't be found")
-    error.statusCode=404
-    next(error)
+    const err=new Error ("Review couldn't be found")
+    err.statusCode=404
+    next(err)
 }
 
 const newReviewImg=await review.createReviewImage({
@@ -124,23 +110,62 @@ res.json({
 
 
 //Edit a review
+
+//Could not figure out Error Response: Body Validation Error handling,
+//also couldn't figure out how it was passing stars validator for allowing
+//numbers outside of 1-5
 router.put('/:reviewId', async (req,res,next)=>{
+    const {reviewId}=req.params
+    const {review, stars}=req.body
 
+    let idReview=await Review.findByPk(reviewId)
 
+    if(!idReview){
+        const err= new Error("Review couldn't be found")
+        err.statusCode=404
+        next(err)
+    }
+
+    idReview.review=review
+    idReview.stars=stars
+
+    res.json({
+        idReview
+    })
 })
 
 
 //Delete a Review
+//Completed
 router.delete('/:reviewId', async (req,res,next)=>{
+    const {reviewId}=req.params
+
+    let idReview=await Review.findByPk(reviewId)
+
+    if(!idReview){
+        const err= new Error("Review couldn't be found")
+        err.statusCode=404
+        next(err)
+    }
+
+    idReview.destroy()
+
+    res.json({
+        message: 'Successfully deleted'
+    })
+
+
 
 })
 
 
-router.use((error,req,res,next)=>{
-    const status=error.statusCode || 500
-    const message=error.message || 'Something went wrong'
+
+router.use((err,req,res,next)=>{
+    const status=err.statusCode || 500
+    const message=err.message || "The requested resource couldn't be found."
     res.status(status)
-    res.json({
+
+   res.json({
         message
     })
 })
