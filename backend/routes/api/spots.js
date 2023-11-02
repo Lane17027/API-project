@@ -13,6 +13,7 @@ const {
   Spot,
   ReviewImage,
   SpotImage,
+  Booking,
 } = require("../../db/models");
 
 const router = express.Router();
@@ -379,6 +380,49 @@ router.post("/:spotId/reviews", requireAuth, async (req, res, next) => {
 });
 
 //Get all Bookings for a Spot based on the Spot's id
-router.get("/:spotId/bookings", async (req, res, next) => {});
+//Completed
+router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const { spotId } = req.params;
+
+  const spot = await Spot.findOne({
+    where: {
+      id: spotId,
+    },
+  });
+
+  if (!spot) {
+    res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+  const bookingsForAll = await Booking.findAll({
+    where: {
+      spotId,
+    },
+    attributes: ["spotId", "startDate", "endDate"],
+  });
+
+  const bookingsForOwner = await Booking.findAll({
+    where: {
+      spotId,
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+  });
+
+  if (user.id !== spot.ownerId) {
+    return res.status(200).json({ Bookings: bookingsForAll });
+  } else return res.status(200).json({ Bookings: bookingsForOwner });
+  // for (let booking of bookings){
+  //   console.log(booking)
+  // }
+
+  // console.log(bookings)
+});
 
 module.exports = router;

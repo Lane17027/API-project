@@ -65,6 +65,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
 router.put("/:bookingId", async (req, res, next) => {});
 
 //Delete a Booking
+//Completed
 router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { bookingId } = req.params;
