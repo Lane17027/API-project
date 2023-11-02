@@ -199,11 +199,47 @@ router.post("/", requireAuth, async (req, res, next) => {
 
   const newSpot = await Spot.create(dataObj);
 
+  await newSpot.save()
+
+
   res.json(newSpot);
 });
 
 //Add an Image to a Spot based on the Spot's id
-router.post("/:spotId/images", async (req, res, next) => {});
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+    const {user}=req
+    const {spotId}=req.params
+    const {url, preview}= req.body
+    const userId=user.id
+
+    const spot=await Spot.findByPk(spotId)
+
+    if(user.id !==spot.ownerId){
+        return res.status(404).json({message: "Forbidden"})
+    }
+
+    if(!spot){
+        return res.status(404).json({
+            message: "Spot couldn't be found"
+          })
+
+    }
+
+  const data= {url,
+  preview}
+
+
+  const newImage= await spot.createSpotImage(data
+  )
+
+
+
+  res.json({id:newImage.id, url: newImage.url, preview: newImage.preview})
+
+
+
+
+});
 
 //Edit a Spot
 router.put("/:spotId", async (req, res, next) => {});
