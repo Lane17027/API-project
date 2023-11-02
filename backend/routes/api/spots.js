@@ -418,11 +418,6 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
   if (user.id !== spot.ownerId) {
     return res.status(200).json({ Bookings: bookingsForAll });
   } else return res.status(200).json({ Bookings: bookingsForOwner });
-  // for (let booking of bookings){
-  //   console.log(booking)
-  // }
-
-  // console.log(bookings)
 });
 
 module.exports = router;
