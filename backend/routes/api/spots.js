@@ -15,9 +15,6 @@ const {
   SpotImage,
 } = require("../../db/models");
 
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
-
 const router = express.Router();
 
 //Part One: Get all Spots-Completed
@@ -41,7 +38,7 @@ router.use((err, req, res, next) => {
 });
 
 //Get all Spots owned by the Current User
-//I believe its complete
+//Completed
 router.get("/current", requireAuth, async (req, res, next) => {
   const { user } = req;
   const userId = user.id;
@@ -94,7 +91,6 @@ router.get("/current", requireAuth, async (req, res, next) => {
     if (previewImage) {
       spot.dataValues.previewImage = previewImage.url;
     } else {
-      console.log(previewImage);
       spot.dataValues.previewImage = "This spot doesn't have a preview image";
     }
   }
@@ -153,12 +149,12 @@ router.get("/:spotId", async (req, res, next) => {
 });
 
 //Create a Spot
-//Isn't returning with an ownerId for some reason
+//Completed
 router.post("/", requireAuth, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
   const dataObj = {
-    ownerId:req.user.id,
+    ownerId: req.user.id,
     address,
     city,
     state,
@@ -221,7 +217,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   }
 
   if (user.id !== spot.ownerId) {
-    return res.status(404).json({ message: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const data = { url, preview };
@@ -246,7 +242,7 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
   }
 
   if (user.id !== spot.ownerId) {
-    return res.status(404).json({ message: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const { address, city, state, country, lat, lng, name, description, price } =
@@ -311,7 +307,7 @@ router.delete("/:spotId", requireAuth, async (req, res, next) => {
   }
 
   if (user.id !== spot.ownerId) {
-    return res.status(404).json({ message: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   await spot.destroy();
@@ -353,13 +349,13 @@ router.get("/:spotId/reviews", async (req, res, next) => {
 });
 
 //Create a Review for a Spot based on the Spot's id
-//Isn't adding the userId
+//I believe completed
 router.post("/:spotId/reviews", requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const { review, stars } = req.body;
   const spot = await Spot.findByPk(spotId);
 
-  const data = { ownerId:req.user.id,review, stars };
+  const data = { ownerId: req.user.id, review, stars };
 
   if (!spot) {
     res.status(404).json({
