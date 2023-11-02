@@ -66,7 +66,6 @@ router.get("/current", async (req, res, next) => {
 });
 
 //Add an Image to a Review based on the Review's id
-
 //Completed
 router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const { user } = req;
@@ -102,11 +101,11 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   }
 
   const newReviewImg = await review.createReviewImage({
-    url,
+    url
   });
 
   res.json({
-    allReviewImage: allReviewImage.length,
+    newReviewImg
   });
 });
 
