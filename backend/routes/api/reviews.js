@@ -112,7 +112,6 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 
 //Edit a review
 
-//Could not figure out Error Response: Body Validation Error handling,
 //I think its completed
 router.put("/:reviewId", requireAuth, async (req, res, next) => {
   const { user } = req;
