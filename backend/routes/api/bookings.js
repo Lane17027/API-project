@@ -113,13 +113,13 @@ currBookings.forEach((bookings) => {
       const bookingEndDate = new Date(bookings.dataValues.endDate).getTime();
 
       const errorsObj = {};
-      console.log(bookings.dataValues);
 
-      if (bookings.dataValues.id === bookingId) {
+      if (bookings.dataValues.id == bookingId) {
         booking.update({
           startDate,
           endDate,
         });
+
 
         return res.status(200).json(booking);
       }

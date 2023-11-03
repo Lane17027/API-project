@@ -20,23 +20,6 @@ const router = express.Router();
 
 //Part One: Get all Spots-Completed
 //Part Two: Add Query Filter to Get All Spots
-// router.get("/", async (req, res, next) => {
-//   const Spots = await Spot.findAll();
-
-//   res.json({
-//     Spots,
-//   });
-// });
-
-// router.use((err, req, res, next) => {
-//   const status = err.statusCode || 500;
-//   const message = err.message || "The requested resource couldn't be found.";
-//   res.status(status);
-
-//   res.json({
-//     message,
-//   });
-// });
 
 router.get("/", async (req, res) => {
   try {
@@ -150,10 +133,6 @@ if (minLat && maxLat) {
       size: pageSize,
     };
 
-    //todo maybe include later. not important rn
-    // if (!response.Spots.length) {
-    //   return res.status(404).json({ message: "spot not found" });
-    // }
 
     res.json(response);
   } catch (error) {
@@ -539,6 +518,8 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
         errors: errObj,
       });
     } else {
+      const stringSpotId=JSON.parse(spotId)
+      const numberSpotId=parseInt(stringSpotId)
       const newBooking = await Booking.create({
         spotId,
         userId,
@@ -546,7 +527,16 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
         endDate,
       });
 
-      res.status(201).json(newBooking);
+      res.status(201).json({
+        id:newBooking.id,
+        spotId:numberSpotId,
+        userId:newBooking.userId,
+        startDate:newBooking.startDate,
+        endDate:newBooking.endDate,
+        createdAt:newBooking.createdAt,
+        updatedAt:newBooking.updatedAt
+
+      });
     }
 
     return null;

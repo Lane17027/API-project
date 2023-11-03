@@ -92,6 +92,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
     next(err);
   }
 
+  console.log(user.id, review.userId)
   if (user.id !== review.userId) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
@@ -111,7 +112,9 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   });
 
   res.json({
-    newReviewImg
+   id: newReviewImg.id,
+   url: newReviewImg.url
+
   });
 });
 
@@ -158,7 +161,14 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
   await idReview.save();
 
   res.status(200).json({
-    idReview,
+    id: idReview.id,
+    userId: idReview.userId,
+    spotId:idReview.spotId,
+    review: idReview.review,
+    stars: idReview.stars,
+    createdAt:idReview.createdAt,
+    updatedAt:idReview.updatedAt
+
   });
 });
 
