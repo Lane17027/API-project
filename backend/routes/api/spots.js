@@ -19,7 +19,7 @@ const {
 const router = express.Router();
 
 //Part One: Get all Spots-Completed
-//Part Two: Add Query Filter to Get All Spots
+//Part Two: Add Query Filter to Get All Spots-Completed
 
 router.get("/", async (req, res) => {
   try {

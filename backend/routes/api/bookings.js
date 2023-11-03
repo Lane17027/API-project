@@ -70,7 +70,6 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
 
     const booking = await Booking.findByPk(bookingId);
 
-    //setup for date comparison
     const newStartDate = new Date(startDate).getTime();
     const newEndDate = new Date(endDate).getTime();
 
@@ -85,7 +84,6 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     }
 
     const currentDate = new Date().getTime();
-    // const exampleEndDate = new Date(endDate).getTime();
     if (newEndDate < currentDate) {
       return res
         .status(403)
@@ -106,7 +104,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
         spotId: booking.spotId,
       },
     });
-currBookings.forEach((bookings) => {
+    currBookings.forEach((bookings) => {
       const bookingStartDate = new Date(
         bookings.dataValues.startDate
       ).getTime();
@@ -120,15 +118,12 @@ currBookings.forEach((bookings) => {
           endDate,
         });
 
-
         return res.status(200).json(booking);
       }
-
 
       if (newStartDate >= bookingStartDate && newStartDate <= bookingEndDate) {
         errorsObj.startDate = "Start date conflicts with an existing bookings";
       }
-
 
       if (newEndDate >= bookingStartDate && newEndDate <= bookingEndDate) {
         errorsObj.endDate = "End date conflicts with an existing bookings";
@@ -139,19 +134,13 @@ currBookings.forEach((bookings) => {
         errorsObj.endDate = "End date conflicts with an existing bookings";
       }
 
-      if (newStartDate === bookingStartDate) {
+      if (
+        newStartDate === bookingStartDate || newStartDate === bookingEndDate
+      ) {
         errorsObj.startDate = "Start date conflicts with an existing bookings";
       }
 
-      if (newStartDate === bookingEndDate) {
-        errorsObj.startDate = "Start date conflicts with an existing bookings";
-      }
-
-      if (newEndDate === bookingEndDate) {
-        errorsObj.endDate = "End date conflicts with an existing bookings";
-      }
-
-      if (newEndDate === bookingStartDate) {
+      if (newEndDate === bookingEndDate || newEndDate === bookingStartDate) {
         errorsObj.endDate = "End date conflicts with an existing bookings";
       }
 
@@ -162,13 +151,12 @@ currBookings.forEach((bookings) => {
         });
       }
     });
-// res.status(200).json(booking);
+    // res.status(200).json(booking);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 
 //Delete a Booking
 //Completed
