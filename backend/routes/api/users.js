@@ -26,6 +26,7 @@ const validateSignup = [
 ];
 
 // Sign up
+//testing
 router.post("/", validateSignup, async (req, res) => {
   //added in line below
   const { email, firstName, lastName, password, username } = req.body;
