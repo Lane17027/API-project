@@ -162,7 +162,7 @@ currBookings.forEach((bookings) => {
         });
       }
     });
-res.status(200).json(booking);
+// res.status(200).json(booking);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
