@@ -89,7 +89,11 @@ router.delete(
       });
     }
 
-    console.log(review);
+   await reviewImageToDelete.destroy()
+
+   res.status(200).json({
+    "message": "Successfully deleted"
+  })
   }
 );
 

@@ -55,6 +55,12 @@ router.get("/current", async (req, res, next) => {
     ],
   });
 
+  if (!myReviews.length){
+    res.status(404).json({
+      message: "This user does not have any reviews"
+    })
+  }
+
   for (let review of myReviews) {
     const previewImage = await SpotImage.findOne({
       where: { spotId: review.spotId },
@@ -62,7 +68,7 @@ router.get("/current", async (req, res, next) => {
     review.Spot.dataValues.previewImage = previewImage.url;
   }
 
-  res.json({ Reviews: myReviews });
+  res.status(200).json({ Reviews: myReviews });
 });
 
 //Add an Image to a Review based on the Review's id
@@ -117,6 +123,8 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
   const { review, stars } = req.body;
 
+  console.log(review)
+
   let idReview = await Review.findByPk(reviewId);
 
   if (!idReview) {
@@ -125,11 +133,14 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
     next(err);
   }
 
-  if (user.id !== review.userId) {
+
+  if (user.id !== idReview.userId) {
     const err = new Error("Forbidden");
     err.statusCode = 403;
     next(err);
   }
+
+
 
   if (!review || stars > 5 || stars < 1) {
     return res.status(400).json({
@@ -146,7 +157,7 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 
   await idReview.save();
 
-  res.json({
+  res.status(200).json({
     idReview,
   });
 });
