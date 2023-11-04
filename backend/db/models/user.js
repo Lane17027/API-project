@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
           onDelete:'CASCADE',
           hooks:true
         }),
-       
+
         User.hasMany(models.Booking, {
           foreignKey: 'userId',
           onDelete:'CASCADE',
@@ -42,11 +42,25 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstName:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
+        validate: {
+          requireFirstName(value){
+            if (!value){
+              throw new Error("First name can't be empty")
+            }
+          }
+        }
       },
       lastName:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
+        validate: {
+          requireLastName(value){
+            if (!value){
+              throw new Error("Last name can't be empty")
+            }
+          }
+        }
       },
       email: {
         type: DataTypes.STRING,

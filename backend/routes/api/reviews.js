@@ -55,17 +55,22 @@ router.get("/current", requireAuth, async (req, res, next) => {
     ],
   });
 
-  if (!myReviews.length){
+  if (!myReviews.length) {
     return res.status(404).json({
-      message: "This user does not have any reviews"
-    })
+      message: "This user does not have any reviews",
+    });
   }
 
   for (let review of myReviews) {
     const previewImage = await SpotImage.findOne({
       where: { spotId: review.spotId },
     });
-    review.Spot.dataValues.previewImage = previewImage.url;
+    if (!previewImage) {
+      review.Spot.dataValues.previewImage =
+        "This property doesn't have a previewImage";
+    } else {
+      review.Spot.dataValues.previewImage = previewImage.url;
+    }
   }
 
   res.status(200).json({ Reviews: myReviews });
@@ -87,25 +92,26 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   });
 
   if (!review) {
-    return res.status(404).json("Review couldn't be found")
+    return res.status(404).json("Review couldn't be found");
   }
 
   if (user.id !== review.userId) {
-    return res.status(403).json('Forbidden')
+    return res.status(403).json("Forbidden");
   }
 
   if (allReviewImage.length >= 10) {
-   return res.status(403).json( "Maximum number of images for this resource was reached")
+    return res
+      .status(403)
+      .json("Maximum number of images for this resource was reached");
   }
 
   const newReviewImg = await review.createReviewImage({
-    url
+    url,
   });
 
   res.json({
-   id: newReviewImg.id,
-   url: newReviewImg.url
-
+    id: newReviewImg.id,
+    url: newReviewImg.url,
   });
 });
 
@@ -120,15 +126,12 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
   let idReview = await Review.findByPk(reviewId);
 
   if (!idReview) {
-   return res.status(404).json("Review couldn't be found")
+    return res.status(404).json("Review couldn't be found");
   }
-
 
   if (user.id !== idReview.userId) {
-   return res.status(403).json("Forbidden")
+    return res.status(403).json("Forbidden");
   }
-
-
 
   if (!review || stars > 5 || stars < 1) {
     return res.status(400).json({
@@ -148,12 +151,11 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
   res.status(200).json({
     id: idReview.id,
     userId: idReview.userId,
-    spotId:idReview.spotId,
+    spotId: idReview.spotId,
     review: idReview.review,
     stars: idReview.stars,
-    createdAt:idReview.createdAt,
-    updatedAt:idReview.updatedAt
-
+    createdAt: idReview.createdAt,
+    updatedAt: idReview.updatedAt,
   });
 });
 
@@ -166,7 +168,7 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   let idReview = await Review.findByPk(reviewId);
 
   if (!idReview) {
-    return res.status(404).json("Review couldn't be found")
+    return res.status(404).json("Review couldn't be found");
   }
 
   if (ownerId !== idReview.userId) {
