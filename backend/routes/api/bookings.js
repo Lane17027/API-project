@@ -1,16 +1,11 @@
 const express = require("express");
-const { Op } = require("sequelize");
-const bcrypt = require("bcryptjs");
+
 
 const {
-  setTokenCookie,
-  restoreUser,
-  requireAuth,
+  requireAuth
 } = require("../../utils/auth");
 const { User, Booking, Spot, SpotImage } = require("../../db/models");
 
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
 
@@ -35,7 +30,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
   });
 
   if (!myBookingsForSpots.length) {
-    res.status(404).json("Booking couldn't be found");
+    return res.status(404).json("Booking couldn't be found");
   }
 
   for (let booking of myBookingsForSpots) {
@@ -167,7 +162,7 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const bookingToDelete = await Booking.findByPk(bookingId);
 
   if (!bookingToDelete) {
-    res.status(404).json({
+    return res.status(404).json({
       message: "Booking couldn't be found",
     });
   }
@@ -181,7 +176,7 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const today = new Date().getTime();
 
   if (today > startDate) {
-    res.status(403).json({
+    return res.status(403).json({
       message: "Bookings that have been started can't be deleted",
     });
   }
