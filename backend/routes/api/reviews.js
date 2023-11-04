@@ -22,7 +22,7 @@ const router = express.Router();
 
 //Get all Reviews of the Current User
 //I believe completed
-router.get("/current", async (req, res, next) => {
+router.get("/current", requireAuth, async (req, res, next) => {
   const { user } = req;
   const userId = user.id;
 
