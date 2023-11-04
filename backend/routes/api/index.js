@@ -26,11 +26,12 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { imageId } = req.params;
 
-  const imageToDelete = await SpotImage.findOne({
-    where: {
-      id: imageId,
-    },
-  });
+  // const imageToDelete = await SpotImage.findOne({
+  //   where: {
+  //     id: imageId,
+  //   },
+  // });
+  const imageToDelete = await SpotImage.findByPk(imageId);
 
   if (!imageToDelete) {
     res.status(404).json({
@@ -38,11 +39,13 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res, next) => {
     });
   }
 
-  const spot = await Spot.findOne({
-    where: {
-      id: imageToDelete.spotId,
-    },
-  });
+  // const spot = await Spot.findOne({
+  //   where: {
+  //     id: imageToDelete.spotId,
+  //   },
+  // });
+
+  const spot = await Spot.findByPk(imageToDelete.spotId);
 
   if (user.id !== spot.ownerId) {
     res.status(403).json({
@@ -65,11 +68,13 @@ router.delete(
     const { user } = req;
     const { imageId } = req.params;
 
-    const reviewImageToDelete = await ReviewImage.findOne({
-      where: {
-        id: imageId,
-      },
-    });
+    // const reviewImageToDelete = await ReviewImage.findOne({
+    //   where: {
+    //     id: imageId,
+    //   },
+    // });
+
+    const reviewImageToDelete = await ReviewImage.findByPk(imageId);
 
     if (!reviewImageToDelete) {
       res.status(404).json({
@@ -77,11 +82,13 @@ router.delete(
       });
     }
 
-    const review = await Review.findOne({
-      where: {
-        id: reviewImageToDelete.reviewId,
-      },
-    });
+    // const review = await Review.findOne({
+    //   where: {
+    //     id: reviewImageToDelete.reviewId,
+    //   },
+    // });
+
+    const review = await Review.findByPk(reviewImageToDelete.reviewId);
 
     if (user.id !== review.userId) {
       res.status(403).json({
