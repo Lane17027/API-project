@@ -32,6 +32,13 @@ router.get("/", async (req, res) => {
       maxPrice,
     } = req.query;
 
+    
+    if (!minLat && !maxLat && !minLng && !maxLng && !minPrice && !maxPrice){
+      const allSpots= await Spot.findAll()
+
+     return res.status(200).json({allSpots})
+    }
+
     const pageNumber = parseInt(page, 10);
     const pageSize = parseInt(size, 10);
 
@@ -67,21 +74,23 @@ router.get("/", async (req, res) => {
     const filtering = {};
 if (minLat && maxLat) {
       filtering.lat = {
-        [Op.between]: [minLat, maxLat],
+        [Op.between]: [minLat, maxLat]
       };
     }
 
     if (minLng && maxLng) {
       filtering.lng = {
-        [Op.between]: [minLng, maxLng],
+        [Op.between]: [minLng, maxLng]
       };
     }
 
     if (minPrice && maxPrice) {
       filtering.price = {
-        [Op.between]: [minPrice, maxPrice],
+        [Op.between]: [minPrice, maxPrice]
       };
     }
+
+    console.log(filtering.lat)
 
     const spots = await Spot.findAll({
       include: [
@@ -94,17 +103,27 @@ if (minLat && maxLat) {
       ],
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
-      where: filtering,
+      where :{
+        lat:filtering.lat,
+        lng:filtering.lng,
+        price:filtering.price
+      }
     });
+
 
     let spotsList = [];
     spots.forEach((spot) => {
       spotsList.push(spot.toJSON());
     });
 
+
     spotsList.forEach((spot) => {
       let totalStars = 0;
       let numReviews = 0;
+
+      if(!spot.SpotImages.length){
+        spot.previewImage = "This spot doesn't have a preview Image"
+      }
       spot.SpotImages.forEach((img) => {
         if (img.preview) {
           spot.previewImage = img.url;
@@ -125,6 +144,7 @@ if (minLat && maxLat) {
       delete spot.SpotImages;
     });
 
+    // console.log(spotsList)
     const response = {
       Spots: spotsList,
       page: pageNumber,
@@ -549,7 +569,13 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
 router.get("/:spotId/reviews", async (req, res, next) => {
   const { spotId } = req.params;
 
-  const Reviews = await Review.findAll({
+const testSpot=await Review.findAll({
+  where: {
+    spotId: 1
+  }
+})
+
+  const spotReview = await Review.findAll({
     where: {
       spotId,
     },
@@ -565,12 +591,14 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     ],
   });
 
-  if (!Reviews.length) {
+  console.log(testSpot)
+
+  if (!spotReview.length) {
     return res.status(404).json({
       message: "Spot couldn't be found",
     });
   }
-  res.status(200).json({ Reviews });
+  res.status(200).json({ spotReview });
 });
 
 //Create a Review for a Spot based on the Spot's id
