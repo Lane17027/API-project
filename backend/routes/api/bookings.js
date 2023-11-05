@@ -1,16 +1,11 @@
 const express = require("express");
 
-
-const {
-  requireAuth
-} = require("../../utils/auth");
-const { User, Booking, Spot, SpotImage } = require("../../db/models");
-
+const { requireAuth } = require("../../utils/auth");
+const { Booking, Spot, SpotImage } = require("../../db/models");
 
 const router = express.Router();
 
 //Get all of the Current User's Bookings
-//I think completed
 router.get("/current", requireAuth, async (req, res, next) => {
   const { user } = req;
   const userId = user.id;
@@ -130,7 +125,8 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
       }
 
       if (
-        newStartDate === bookingStartDate || newStartDate === bookingEndDate
+        newStartDate === bookingStartDate ||
+        newStartDate === bookingEndDate
       ) {
         errorsObj.startDate = "Start date conflicts with an existing bookings";
       }

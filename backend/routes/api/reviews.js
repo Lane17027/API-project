@@ -1,12 +1,6 @@
 const express = require("express");
-const { Op } = require("sequelize");
-const bcrypt = require("bcryptjs");
 
-const {
-  setTokenCookie,
-  restoreUser,
-  requireAuth,
-} = require("../../utils/auth");
+const { requireAuth } = require("../../utils/auth");
 const {
   User,
   Review,
@@ -15,13 +9,9 @@ const {
   SpotImage,
 } = require("../../db/models");
 
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
-
 const router = express.Router();
 
 //Get all Reviews of the Current User
-//I believe completed
 router.get("/current", requireAuth, async (req, res, next) => {
   const { user } = req;
   const userId = user.id;
@@ -77,7 +67,6 @@ router.get("/current", requireAuth, async (req, res, next) => {
 });
 
 //Add an Image to a Review based on the Review's id
-//Completed
 router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { url } = req.body;
@@ -116,8 +105,6 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 });
 
 //Edit a review
-
-//I think its completed
 router.put("/:reviewId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { reviewId } = req.params;
@@ -160,7 +147,6 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 });
 
 //Delete a Review
-//Completed
 router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
   const ownerId = req.user.id;
@@ -182,15 +168,5 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
     message: "Successfully deleted",
   });
 });
-
-// router.use((err, req, res, next) => {
-//   const status = err.statusCode || 500;
-//   const message = err.message || "The requested resource couldn't be found.";
-//   res.status(status);
-
-//   res.json({
-//     message,
-//   });
-// });
 
 module.exports = router;
