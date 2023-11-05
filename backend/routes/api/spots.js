@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
       maxPrice,
     } = req.query;
 
-    
+
     if (!minLat && !maxLat && !minLng && !maxLng && !minPrice && !maxPrice){
       const allSpots= await Spot.findAll()
 
@@ -103,11 +103,7 @@ if (minLat && maxLat) {
       ],
       limit: pageSize,
       offset: (pageNumber - 1) * pageSize,
-      where :{
-        lat:filtering.lat,
-        lng:filtering.lng,
-        price:filtering.price
-      }
+      where: filtering
     });
 
 

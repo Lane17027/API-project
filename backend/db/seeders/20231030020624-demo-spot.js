@@ -42,10 +42,10 @@ module.exports = {
         state: 'Utah',
         country: 'United States of America',
         lat: 38.02,
-        lng: 120.03,
+        lng: 34,
         name: 'Wifes Childhood Home',
         description: 'Where my wife grew up next to Zion National Park',
-        price: 100
+        price: 99
       },
       {
         ownerId: 2,
@@ -65,8 +65,8 @@ module.exports = {
         city: 'Honeyville',
         state: 'Utah',
         country: 'United States of America',
-        lat: 22.23,
-        lng: 23.34,
+        lat: 33,
+        lng: 35.63,
         name: 'Honeyville Home',
         description: 'Nice home in HoneyVille',
         price: 73
