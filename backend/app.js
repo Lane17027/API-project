@@ -77,8 +77,8 @@ app.use((err, _req, res, _next) => {
   res.json({
     title: err.title,
     message: err.message,
-    errors: err.errors,
-    stack: isProduction ? null : err.stack,
+    errors: err.errors
+    // stack: isProduction ? null : err.stack,
   });
 });
 
