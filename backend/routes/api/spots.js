@@ -30,9 +30,56 @@ router.get("/", async (req, res) => {
     } = req.query;
 
     if (!minLat && !maxLat && !minLng && !maxLng && !minPrice && !maxPrice) {
-      const allSpots = await Spot.findAll();
+      //changing inside of this
+      const spots = await Spot.findAll({
+        include: [
+          {
+            model: SpotImage,
+          },
+          {
+            model: Review,
+          },
+        ]
+      });
 
-      return res.status(200).json({ allSpots });
+      let spotsList = [];
+      spots.forEach((spot) => {
+        spotsList.push(spot.toJSON());
+      });
+
+      spotsList.forEach((spot) => {
+        let totalStars = 0;
+        let numReviews = 0;
+
+        if (!spot.SpotImages.length) {
+          spot.previewImage = "This spot doesn't have a preview Image";
+        }
+        spot.SpotImages.forEach((img) => {
+          if (img.preview) {
+            spot.previewImage = img.url;
+          }
+        });
+        spot.Reviews.forEach((rev) => {
+          totalStars += rev.stars;
+          numReviews++;
+        });
+        if (numReviews > 0) {
+          spot.avgRating = totalStars / numReviews;
+        } else {
+          spot.avgRating =
+            "There are no reviews for this spot yet. Be the first to review!";
+        }
+
+        delete spot.Reviews;
+        delete spot.SpotImages;
+      });
+
+      const response = {
+        Spots: spotsList
+      };
+
+
+      return res.status(200).json(response);
     }
 
     const pageNumber = parseInt(page, 10);
