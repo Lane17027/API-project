@@ -26,29 +26,19 @@ router.delete("/spot-images/:imageId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { imageId } = req.params;
 
-  // const imageToDelete = await SpotImage.findOne({
-  //   where: {
-  //     id: imageId,
-  //   },
-  // });
+
   const imageToDelete = await SpotImage.findByPk(imageId);
 
   if (!imageToDelete) {
-    res.status(404).json({
+   res.status(404).json({
       message: "Spot Image couldn't be found",
     });
   }
 
-  // const spot = await Spot.findOne({
-  //   where: {
-  //     id: imageToDelete.spotId,
-  //   },
-  // });
-
   const spot = await Spot.findByPk(imageToDelete.spotId);
 
   if (user.id !== spot.ownerId) {
-    res.status(403).json({
+  return res.status(403).json({
       message: "Forbidden",
     });
   }
@@ -68,25 +58,13 @@ router.delete(
     const { user } = req;
     const { imageId } = req.params;
 
-    // const reviewImageToDelete = await ReviewImage.findOne({
-    //   where: {
-    //     id: imageId,
-    //   },
-    // });
-
     const reviewImageToDelete = await ReviewImage.findByPk(imageId);
 
     if (!reviewImageToDelete) {
-      res.status(404).json({
+    return res.status(404).json({
         message: "Review Image couldn't be found",
       });
     }
-
-    // const review = await Review.findOne({
-    //   where: {
-    //     id: reviewImageToDelete.reviewId,
-    //   },
-    // });
 
     const review = await Review.findByPk(reviewImageToDelete.reviewId);
 
