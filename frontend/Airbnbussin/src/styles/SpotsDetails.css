@@ -1,0 +1,18 @@
+.spot-details-container{
+    min-width: 1000px;
+}
+.mini-spot-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.share-favorites {
+    display: flex;
+    gap: 20px; /* Add space between the child elements */
+}
+
+.spot-name{
+    font-size: 50%;
+}
