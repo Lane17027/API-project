@@ -1,0 +1,34 @@
+.spots-homepage-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+}
+
+.spots-homepage-container > div{
+    justify-self: center;
+}
+
+h3{
+    margin: 1% 0;
+}
+
+.spot-homepage-card-container {
+  max-width: 50%;
+  overflow: hidden;
+}
+
+.price{
+    display: flex;
+    margin-top: 0%;
+}
+
+.spot-homepage-card-container img {
+  max-width: 100%;
+}
+
+.spot-name-avg-rating-container {
+  display: flex;
+  justify-content: space-between;
+
+}
