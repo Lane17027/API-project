@@ -194,6 +194,46 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { city } = req.query;
+    console.log(city)
+    if (!city) {
+      return res.status(400).json({
+        message: "Bad Request",
+        errors: {
+          city: "City parameter is required",
+        },
+      });
+    }
+
+    const spots = await Spot.findAll({
+      where: { city },
+      include: [
+        {
+          model: SpotImage,
+        },
+        {
+          model: Review,
+        },
+      ],
+    });
+
+    let spotsList = spots.map((spot) => spot.toJSON());
+
+    // Code for processing spot data and calculating average rating goes here
+
+    const response = {
+      Spots: spotsList,
+    };
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error searching spots:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 //Get all Spots owned by the Current User
 //Completed
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -713,5 +753,9 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
     return res.status(200).json({ Bookings: bookingsForAll });
   } else return res.status(200).json({ Bookings: bookingsForOwner });
 });
+
+
+
+
 
 module.exports = router;

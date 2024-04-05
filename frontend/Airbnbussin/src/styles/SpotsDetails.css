@@ -1,4 +1,4 @@
-.spot-details-container{
+/* .spot-details-container{
     min-width: 1000px;
 }
 .mini-spot-header{
@@ -10,7 +10,7 @@
 
 .share-favorites {
     display: flex;
-    gap: 20px; /* Add space between the child elements */
+    gap: 20px;
 }
 
 .spot-name{
@@ -38,13 +38,129 @@ height: 100%;
 
   .four-images-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* You already have this */
-    justify-items: center; /* Center the grid items horizontally */
-    align-items: center; /* Center the grid items vertically */
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
   }
 
   .four-images-container img{
     justify-self: center;
     max-width: 90%;
     max-height: 90%;
+  }
+
+  .spots-details-name{
+    display: flex;
+    justify-content: left;
+  }
+
+  .spots-details-inline {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .spots-details-guests-bedrooms-bathrooms, .spots-details-owner-name{
+    display: flex;
+    justify-content: left;
+    margin: 0 0;
+  }
+
+  .long-description{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 50%;
+    text-align: left;
+  }
+  h5{
+    margin: 0 0;
+  } */
+
+  .spot-details-container {
+    min-width: 1000px;
+  }
+
+  .mini-spot-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .share-favorites {
+    display: flex;
+    gap: 20px;
+  }
+
+  .spot-name {
+    font-size: 50%;
+  }
+
+  .all-images-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .solo-preview-image {
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .solo-preview-image img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .four-images-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .four-images-container img {
+    justify-self: center;
+    max-width: 90%;
+    max-height: 90%;
+  }
+
+  .spots-details-name {
+    display: flex;
+    justify-content: left;
+  }
+
+  .spots-details-inline {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .spots-details-guests-bedrooms-bathrooms,
+  .spots-details-owner-name {
+    display: flex;
+    justify-content: left;
+    margin: 0 0;
+  }
+
+  .long-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 50%;
+    text-align: left;
+  }
+
+  h5 {
+    margin: 0 0;
+  }
+
+  .reservation-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+    border: 10px solid red;
   }
