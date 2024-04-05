@@ -11,15 +11,9 @@ const Header = () => {
 
   return (
     <div>
-      <h1>My App</h1>
       <SearchBar onSearch={handleSearch} />
-      <SearchSpotList spots={searchedSpots} />
     </div>
   );
 };
 
 export default Header;
-
-// export default function Header(){
-//     return <div>This is header</div>
-// }

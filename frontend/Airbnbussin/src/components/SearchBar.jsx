@@ -1,8 +1,11 @@
+
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
   const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
@@ -12,14 +15,12 @@ const SearchBar = ({ onSearch }) => {
     e.preventDefault();
     try {
       const response = await axios.get(`http://localhost:8000/api/spots/search?city=${searchInput}`);
-      const spots = response.data.Spots || []; // Check if response data exists
-      onSearch(spots);
+      const spots = response.data.Spots || [];
+      navigate(`/search?city=${searchInput}`);
     } catch (error) {
       console.error('Error searching for spots:', error);
-      onSearch([]); // Pass an empty array if there's an error
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit}>
