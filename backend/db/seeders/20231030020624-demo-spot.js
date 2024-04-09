@@ -10,7 +10,6 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-
       await Spot.bulkCreate([
         {
         ownerId: 1,
@@ -18,58 +17,58 @@ module.exports = {
         city: 'Idaho Falls',
         state: 'Idaho',
         country: 'United States of America',
-        lat: 43.48,
-        lng: -112.07,
-        name: 'Cozy home',
-        description: 'My childhood home that I grew up in Idaho',
+        lat: 43.480802640023335,
+        lng: -112.07777036153364,
+        name: 'My Childhood home',
+        description: 'My childhood home that I grew up in Idaho. This 1860 square foot single family home has 4 bedrooms and 2.0 bathrooms. This home is located at 2330 Saddle Ct, Idaho Falls, ID 83402.',
         price: 50
       }, {
         ownerId: 1,
-        address: '2100 W 1450',
-        city: 'Layton',
-        state: 'Utah',
+        address: '9515 Sand Point Way NE',
+        city: 'Seattle',
+        state: 'Washington',
         country: 'United States of America',
         lat: 32.01,
         lng: -101.22,
-        name: 'Cozy Layton home',
-        description: 'Enjoy this beautiful, spacious home',
-        price: 33
+        name: 'Cozy Seattle home',
+        description: "Step through the antique Indian gate and feel the city's turbulence transform into the calm beauty of your private park and fountain.",
+        price: 300
       },
       {
         ownerId: 2,
-        address: '3303 wifes street',
+        address: '177 E 300 N',
         city: 'Hurricane',
         state: 'Utah',
         country: 'United States of America',
-        lat: 38.02,
-        lng: 34,
+        lat: 37.18138393940344,
+        lng: -113.28503626058162,
         name: 'Wifes Childhood Home',
         description: 'Where my wife grew up next to Zion National Park',
         price: 99
       },
       {
         ownerId: 2,
-        address: '2100 N Churchwood Drive',
-        city: 'Tooele',
-        state: 'Utah',
+        address: '3803 Gilman Avenue W',
+        city: 'Seattle',
+        state: 'Washington',
         country: 'United States of America',
-        lat: 69.69,
-        lng: 43.34,
-        name: 'Tooele Townhouse',
-        description: 'Townhouse in Tooele near Lagoon',
+        lat: 47.654374,
+        lng: -122.385145,
+        name: 'Nice house in downtown Seattle',
+        description: "The LAST HOME available in this community - your new oasis in Magnolia awaits!",
         price: 56
       },
       {
         ownerId: 3,
-        address: '6300 N Salt Creed RD',
-        city: 'Honeyville',
+        address: '253 White Pine Canyon Rd',
+        city: 'Park City',
         state: 'Utah',
         country: 'United States of America',
-        lat: 33,
-        lng: 35.63,
-        name: 'Honeyville Home',
-        description: 'Nice home in HoneyVille',
-        price: 73
+        lat: 40.648226654088575,
+        lng: -111.55126918929693,
+        name: 'Beautiful home in Park City!',
+        description: "Presenting 'Monitor's Rest', winner of the distinguished Robb Report Best of the Best award for 'Best Amenities'.",
+        price: 250
       }], {validate:true});
 
   },
