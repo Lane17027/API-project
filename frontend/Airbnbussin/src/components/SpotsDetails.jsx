@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/SpotsDetails.css";
+import { Link } from "react-router-dom";
 
 export default function SpotsDetails() {
   let { id } = useParams();
@@ -50,16 +51,16 @@ export default function SpotsDetails() {
       </div>
       <div className="four-images-container">
         <div className="img1">
-          <img className="spot-image" src={spot.SpotImages[0].url} />
+          <img className="spot-image" src={spot.SpotImages[1].url} />
         </div>
         <div className="img2">
-          <img className="spot-image" src={spot.SpotImages[0].url} />
+          <img className="spot-image" src={spot.SpotImages[2].url} />
         </div>
         <div className="img3">
-          <img className="spot-image" src={spot.SpotImages[0].url} />
+          <img className="spot-image" src={spot.SpotImages[3].url} />
         </div>
         <div className="img4">
-          <img className="spot-image" src={spot.SpotImages[0].url} />
+          <img className="spot-image" src={spot.SpotImages[4].url} />
         </div>
       </div>
     </div>
@@ -67,9 +68,14 @@ export default function SpotsDetails() {
       <div>
         <div className="spots-details-name">
           {/* Need to Change this later to brief description */}
-          <h3>{spot.name}</h3>
+          {/* <h3>{spot.name}</h3> */}
         </div>
-        <button>Show All Photos</button>
+        <div className="show-all-photos-container">
+        <button className="show-all-photos">
+        <Link to={`/show-all-photos/${id}`}>Show All Photos</Link>
+      </button>
+
+        </div>
         <h4 className="spots-details-guests-bedrooms-bathrooms">
           # of guests, # of bedrooms, # of bathrooms
         </h4>
@@ -79,13 +85,7 @@ export default function SpotsDetails() {
         <div className="long-description">
           <h4>Long Description</h4>
           <h5>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum.
+            {spot.description}
           </h5>
         </div>
       </div>
@@ -103,4 +103,3 @@ export default function SpotsDetails() {
     </div>
   );
 }
-

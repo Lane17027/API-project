@@ -81,6 +81,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false
     },
     description: {
+      //type: Sequelize.TEXT,
       type:DataTypes.STRING,
       // added null
       allowNull:false
