@@ -34,7 +34,7 @@ const SearchSpotList = () => {
   }
 
 
-  if (spots || spots.lengh >= 1) {
+  if (spots || spots.length >= 1) {
     for (let spot of spots) {
       let sum = 0;
       for (let i = 0; i < spot.Reviews.length; i++) {
@@ -42,7 +42,14 @@ const SearchSpotList = () => {
         sum += spot.Reviews[i].stars;
       }
       let average = sum / spot.Reviews.length;
-      spot.avgRating = average;
+      if(!average){
+        spot.avgRating = 0;
+
+      }
+      else{
+        spot.avgRating = average;
+      }
+
     }
   }
 
