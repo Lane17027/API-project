@@ -16,9 +16,21 @@ export default function Spots() {
       const response = await axios.get(`http://localhost:8000/api/spots`);
       console.log(response.data.Spots);
       setSpots(response.data.Spots);
+
     };
     getSpots();
   }, []);
+
+  if (spots || spots.length >= 1) {
+    for (let spot of spots) {
+      if (typeof spot.avgRating === 'string') {
+        spot.avgRating=0
+      }
+
+    }
+  }
+
+
 
   return (
     <div>
@@ -33,7 +45,7 @@ export default function Spots() {
             <div className="spot-name-avg-rating-container">
               <h3>{spot.name}</h3>
               <h3>
-                {spot.avgRating}{" "}
+                {spot.avgRating}
                 {/* <img
                   src="https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-star-vector-icon-png-image_696411.jpg"
                   alt="Star"
