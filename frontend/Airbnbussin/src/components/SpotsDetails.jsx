@@ -1,15 +1,17 @@
 
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/SpotsDetails.css";
 import { Link } from "react-router-dom";
 
+
 export default function SpotsDetails() {
   let { id } = useParams();
   const [spot, setSpot] = useState(null);
   const [loading, setLoading] = useState(true);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     const getSpot = async () => {
@@ -27,6 +29,23 @@ export default function SpotsDetails() {
     };
     getSpot();
   }, [id]);
+
+  console.log(spot)
+
+  useEffect(() => {
+    if (spot && window.google) {
+      const mapOptions = {
+        center: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        zoom: 14,
+      };
+      const map = new window.google.maps.Map(mapRef.current, mapOptions);
+      new window.google.maps.Marker({
+        position: { lat: parseFloat(spot.lat), lng: parseFloat(spot.lng) },
+        map,
+        title: spot.name,
+      });
+    }
+  }, [spot]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -67,8 +86,6 @@ export default function SpotsDetails() {
     <div className="spots-details-inline">
       <div>
         <div className="spots-details-name">
-          {/* Need to Change this later to brief description */}
-          {/* <h3>{spot.name}</h3> */}
         </div>
         <div className="show-all-photos-container">
         <button className="show-all-photos">
@@ -83,7 +100,7 @@ export default function SpotsDetails() {
           Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
         </h4>
         <div className="long-description">
-          <h4>Long Description</h4>
+          <h4>Long Description: </h4>
           <h5>
             {spot.description}
           </h5>
@@ -97,7 +114,19 @@ export default function SpotsDetails() {
         <button className="reserve-button">Reserve</button>
       </div>
     </div>
+
+    <div>
+      <div>
+      <div className="google-map" ref={mapRef} style={{ width: "100%", height: "400px" }}></div>
+      </div>
+
+    </div>
+
   </div>
+
+
+
+
 )}
 
     </div>

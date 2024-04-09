@@ -9,6 +9,7 @@ import HomePage from "./HomePage";
 import SearchSpotList from "./SearchSpotList";
 import ShowAllPhoto from "./ShowAllPhoto";
 
+//Google-Maps api key: AIzaSyDjXjj_HGAQqvWGL-V6V9k-8l6aV-V48o8
 
 
 export default function Main() {
