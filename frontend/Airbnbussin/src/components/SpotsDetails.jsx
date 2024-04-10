@@ -11,6 +11,7 @@ export default function SpotsDetails() {
   let { id } = useParams();
   const [spot, setSpot] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState(null)
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -19,7 +20,6 @@ export default function SpotsDetails() {
         const response = await axios.get(
           `http://localhost:8000/api/spots/${id}`
         );
-        console.log(response.data);
         setSpot(response.data);
         setLoading(false);
       } catch (error) {
@@ -29,8 +29,6 @@ export default function SpotsDetails() {
     };
     getSpot();
   }, [id]);
-
-  console.log(spot)
 
   useEffect(() => {
     if (spot && window.google) {
@@ -46,6 +44,20 @@ export default function SpotsDetails() {
       });
     }
   }, [spot]);
+
+  useEffect(()=>{
+    const getReviews= async() =>{
+      const response= await axios.get(`http://localhost:8000/api/spots/${id}/reviews`)
+      if(response.data.spotReview){
+        setReviews(response.data.spotReview)
+        return
+      }
+      // console.log(response.data.spotReview)
+    }
+    getReviews()
+  }, [reviews]);
+
+  console.log(reviews)
 
   if (loading) {
     return <p>Loading...</p>;
@@ -114,6 +126,28 @@ export default function SpotsDetails() {
         <button className="reserve-button">Reserve</button>
       </div>
     </div>
+
+    <div className="reviews-container">
+      {reviews ? (
+        <div>
+          <h2>Reviews({reviews.length})</h2>
+
+            {reviews.map((review, index)=> (
+              <div key={index} className="review">
+                <h2>{review.User.firstName} {review.User.lastName} {review.stars}/5</h2>
+                <p>-{review.review}</p>
+              </div>
+            ))}
+            <div>
+              
+            </div>
+        </div>
+      ) : (
+        <h3>No reviews for this spot</h3>
+      )}
+    </div>
+
+
 
     <div>
       <div>
