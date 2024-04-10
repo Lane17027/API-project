@@ -147,9 +147,8 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 });
 
 //Delete a Review
-router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+router.delete("/:reviewId", async (req, res, next) => {
   const { reviewId } = req.params;
-  const ownerId = req.user.id;
 
   let idReview = await Review.findByPk(reviewId);
 
@@ -157,16 +156,34 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
     return res.status(404).json("Review couldn't be found");
   }
 
-  if (ownerId !== idReview.userId) {
-    return res.status(403).json({
-      message: "You are not authorized to delete this review",
-    });
-  }
   await idReview.destroy();
 
   res.status(200).json({
     message: "Successfully deleted",
   });
 });
+
+//with auth
+// router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+//   const { reviewId } = req.params;
+//   const ownerId = req.user.id;
+
+//   let idReview = await Review.findByPk(reviewId);
+
+//   if (!idReview) {
+//     return res.status(404).json("Review couldn't be found");
+//   }
+
+//   if (ownerId !== idReview.userId) {
+//     return res.status(403).json({
+//       message: "You are not authorized to delete this review",
+//     });
+//   }
+//   await idReview.destroy();
+
+//   res.status(200).json({
+//     message: "Successfully deleted",
+//   });
+// });
 
 module.exports = router;

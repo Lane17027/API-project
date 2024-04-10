@@ -1,0 +1,62 @@
+.create-review-container {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.create-review-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.create-review-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-review-container form div {
+  margin-bottom: 15px;
+}
+
+.create-review-container label {
+  font-weight: bold;
+}
+
+.create-review-container input[type="number"],
+.create-review-container textarea,
+.create-review-container input[type="submit"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.create-review-container textarea {
+  height: 100px;
+}
+
+.create-review-container input[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.create-review-container input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.create-review-container .input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.create-review-container .input-container label {
+  margin-bottom: 5px;
+}
+
+.create-review-container #userId,
+.create-review-container #stars {
+  width: 100px;
+}
