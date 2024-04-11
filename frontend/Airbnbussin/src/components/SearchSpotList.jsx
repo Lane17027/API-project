@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+// import "../styles/Spots.css";
 
 const SearchSpotList = () => {
   const [spots, setSpots] = useState([]);
@@ -33,7 +34,6 @@ const SearchSpotList = () => {
     return <div>No spots found</div>;
   }
 
-
   if (spots || spots.length >= 1) {
     for (let spot of spots) {
       let sum = 0;
@@ -42,14 +42,11 @@ const SearchSpotList = () => {
         sum += spot.Reviews[i].stars;
       }
       let average = sum / spot.Reviews.length;
-      if(!average){
+      if (!average) {
         spot.avgRating = 0;
-
-      }
-      else{
+      } else {
         spot.avgRating = average;
       }
-
     }
   }
 
@@ -69,7 +66,7 @@ const SearchSpotList = () => {
               alt={`Spot ${spot.id}`}
             />
             <div className="spot-name-avg-rating-container">
-              <h3>{spot.name}</h3>
+              <h3 className="spot-text">{spot.name}</h3>
               <h3>{spot.avgRating}</h3>
             </div>
             <div className="price">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import '../styles/ShowAllPhoto.css'
+import "../styles/ShowAllPhoto.css";
 
 export default function ShowAllPhoto() {
   const { id } = useParams();
@@ -34,9 +34,8 @@ export default function ShowAllPhoto() {
   console.log(spot.SpotImages);
   return (
     <div>
-        <h1>All Photos({spot.SpotImages.length})</h1>
+      <h1>All Photos({spot.SpotImages.length})</h1>
       <div className="all-images-container">
-
         {spot.SpotImages.map((image, index) => (
           <div className="single-image">
             <img className="singles-image" src={image.url} />

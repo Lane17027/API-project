@@ -1,18 +1,21 @@
-import { useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import "../styles/CreateReview.css";
+import { useState } from 'react';
+import axios from 'axios';
+import { useParams, useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
 
-const CreateReview = () => {
-  const navigate = useNavigate();
-  let { id } = useParams();
 
+const UpdateReview = () => {
+  const { id } = useParams();
+  const location = useLocation();
+  const { userId, review, stars, spotId } = location.state || {};
+  const navigate = useNavigate();
+
+  console.log(spotId)
   const [formData, setFormData] = useState({
-    userId: "",
-    review: "",
-    stars: 1,
+    userId: userId || '',
+    review: review || '',
+    stars: stars || 1,
   });
 
   const handleChange = (e) => {
@@ -23,28 +26,17 @@ const CreateReview = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const reviewData = { ...formData };
-      reviewData.userId = parseInt(formData.userId);
-
-      const response = await axios.post(
-        `http://localhost:8000/api/spots/${id}/reviews`,
-        reviewData
-      );
-      console.log("Review created:", response.data);
-      setFormData({
-        userId: "",
-        review: "",
-        stars: 1,
-      });
-      navigate(`/spots/${id}`)
+      const response = await axios.put(`http://localhost:8000/api/reviews/${id}`, formData);
+      console.log('Review updated:', response.data);
+      navigate(`/spots/${spotId}`)
     } catch (error) {
-      console.error("Error creating review:", error);
+      console.error('Error updating review:', error);
     }
   };
 
   return (
     <div className="create-review-container">
-      <h2>Create a Review</h2>
+      <h2>Update Review</h2>
       <form onSubmit={handleSubmit}>
         {/* Input field for userId */}
         <div className="input-container">
@@ -83,10 +75,10 @@ const CreateReview = () => {
             required
           />
         </div>
-        <button type="submit">Submit Review</button>
+        <button type="submit">Update Review</button>
       </form>
     </div>
   );
 };
 
-export default CreateReview;
+export default UpdateReview;

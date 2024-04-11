@@ -16,21 +16,17 @@ export default function Spots() {
       const response = await axios.get(`http://localhost:8000/api/spots`);
       console.log(response.data.Spots);
       setSpots(response.data.Spots);
-
     };
     getSpots();
   }, []);
 
   if (spots || spots.length >= 1) {
     for (let spot of spots) {
-      if (typeof spot.avgRating === 'string') {
-        spot.avgRating=0
+      if (typeof spot.avgRating === "string") {
+        spot.avgRating = 0;
       }
-
     }
   }
-
-
 
   return (
     <div>
@@ -40,7 +36,11 @@ export default function Spots() {
 
       <div className="spots-homepage-container">
         {spots.map((spot, index) => (
-          <div className="spot-homepage-card-container" key={spot.id} onClick={()=> showSpot(spot.id)}>
+          <div
+            className="spot-homepage-card-container"
+            key={spot.id}
+            onClick={() => showSpot(spot.id)}
+          >
             <img className="spot-image" src={spot.previewImage} />
             <div className="spot-name-avg-rating-container">
               <h3>{spot.name}</h3>

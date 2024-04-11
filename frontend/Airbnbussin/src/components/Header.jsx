@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import SearchBar from './SearchBar';
-import SearchSpotList from './SearchSpotList';
+import { useState } from "react";
+import SearchBar from "./SearchBar";
+import SearchSpotList from "./SearchSpotList";
 
 const Header = () => {
   const [searchedSpots, setSearchedSpots] = useState([]);

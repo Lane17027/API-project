@@ -13,18 +13,11 @@ export default function SpotsDetails() {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      // Send DELETE request to delete the review
       await axios.delete(`http://localhost:8000/api/reviews/${reviewId}`);
-
-      // Update the UI to reflect the changes (optional)
-      // For example, you can remove the deleted review from the state
-      // or fetch the updated list of reviews from the server.
     } catch (error) {
-      console.error('Error deleting review:', error);
-      // Handle errors if the deletion fails (optional)
+      console.error("Error deleting review:", error);
     }
   };
-
 
   useEffect(() => {
     const getSpot = async () => {
@@ -41,6 +34,8 @@ export default function SpotsDetails() {
     };
     getSpot();
   }, [id]);
+
+  console.log('spot',spot)
 
   useEffect(() => {
     if (spot && window.google) {
@@ -66,12 +61,9 @@ export default function SpotsDetails() {
         setReviews(response.data.spotReview);
         return;
       }
-      // console.log(response.data.spotReview)
     };
     getReviews();
   }, [reviews]);
-
-  console.log(reviews);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -117,9 +109,9 @@ export default function SpotsDetails() {
                   <Link to={`/show-all-photos/${id}`}>Show All Photos</Link>
                 </button>
               </div>
-              <h4 className="spots-details-guests-bedrooms-bathrooms">
+              {/* <h4 className="spots-details-guests-bedrooms-bathrooms">
                 # of guests, # of bedrooms, # of bathrooms
-              </h4>
+              </h4> */}
               <h4 className="spots-details-owner-name">
                 Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
               </h4>
@@ -129,7 +121,10 @@ export default function SpotsDetails() {
               </div>
             </div>
             <div className="reservation-container">
-              <div className="reservation-cost">Total Cost: $XXX</div>
+              <div className="reservation-cost">Cost per night: ${spot.price}</div>
+              <div>Total Nights: 5</div>
+              <div>Tax: ${.8*spot.price*5}</div>
+              <div>Total: ${(.8*spot.price*5)+spot.price*5}</div>
               <button className="reserve-button">Reserve</button>
             </div>
           </div>
@@ -139,16 +134,37 @@ export default function SpotsDetails() {
               <div>
                 <h2>Reviews({reviews.length})</h2>
 
-                {reviews.map((review, index) => (
-                  <div key={index} className="review">
-                    <h2>
-                      {review.User.firstName} {review.User.lastName}{" "}
-                      {review.stars}/5
-                    </h2>
-                    <p>-{review.review}</p>
-                    <button onClick={() => handleDeleteReview(review.id)}>Delete Review</button>
-                  </div>
-                ))}
+                {reviews.map((review, index) => {
+
+
+                  return (
+                    <div key={index} className="review">
+                      <h2>
+                        {review.User.firstName} {review.User.lastName}{" "}
+                        {review.stars}/5
+                      </h2>
+                      <p>-{review.review}</p>
+                      <div className="update-delete-container">
+                        <button onClick={() => handleDeleteReview(review.id)}>
+                          Delete Review
+                        </button>
+                        <button className="update-a-review">
+                          <Link
+                            to={`/update-review/${review.id}`}
+                            state={{
+                              userId: review.User.id,
+                              review: review.review,
+                              stars: review.stars,
+                              spotId: review.spotId
+                            }}
+                          >
+                            Update This Review
+                          </Link>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
                 {/* <div>
 
             </div> */}
@@ -157,10 +173,10 @@ export default function SpotsDetails() {
               <h3>No reviews for this spot</h3>
             )}
             <div className="write-review-container">
-                <button className="write-a-review">
-                  <Link to={`/create-review/${id}`}>Write a Review</Link>
-                </button>
-              </div>
+              <button className="write-a-review">
+                <Link to={`/create-review/${id}`}>Write a Review</Link>
+              </button>
+            </div>
           </div>
 
           <div>

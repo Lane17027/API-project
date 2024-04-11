@@ -9,6 +9,10 @@
   align-items: center;
 }
 
+.spot-text{
+  text-align: left;
+}
+
 .share-favorites {
   display: flex;
   gap: 20px;
@@ -83,7 +87,8 @@ h5 {
   flex-direction: column;
   justify-content: space-between;
   height: 150px;
-  border: 10px solid red;
+  width: 150px;
+  /* border: 10px solid red; */
 }
 
 .show-all-photos-container {
@@ -106,6 +111,15 @@ h5 {
 .review h2, p{
   margin-top: 5px;
   margin-bottom: 10px;
+}
+.update-delete-container{
+  width: 60%;
+  display: flex;
+  justify-content:space-between;
+}
+
+.spot-homepage-card-container{
+  text-align: left;
 }
 
 @media (max-width: 430px) {
@@ -187,5 +201,25 @@ h5 {
     justify-content: center;
 
   }
+  .update-delete-container{
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+  }
+
+  .review{
+    width: 100%;
+  }
+
+  .write-review-container{
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* .spots-homepage-container{
+    grid-template-columns: 1fr;
+  } */
+
+
 
 }
